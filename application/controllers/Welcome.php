@@ -22,9 +22,10 @@ class Welcome extends CI_Controller {
 	{
 		$isBackup = $this->input->post('is___backup_db');
 
+		// Load the DB utility class
+		$this->load->dbutil();
+
 		if ($isBackup) {
-			// Load the DB utility class
-			$this->load->dbutil();
 
 			// Konfigurasi
 			$prefs = array(
@@ -47,7 +48,11 @@ class Welcome extends CI_Controller {
 			echo '<p>Berhasil</p>';
 		}
 
-		$this->load->view('home_page');
+		$this->load->view('home_page', [
+			'userLapak' => $this->db->query(
+					"SELECT user.*, lapak.*, user.id AS user_id, lapak.id AS lapak_id FROM user INNER JOIN lapak ON lapak.user_id = user.id",
+				),
+		]);
 	}
 
 	public function welcome()
